@@ -91,7 +91,11 @@ server {
     }
 
     location ~ \.php$ {
-        fastcgi_pass 127.0.0.1:9000;
+        # Prevent hacks. See https://nealpoole.com/blog/2011/04/setting-up-php-fastcgi-and-nginx-dont-trust-the-tutorials-check-your-configuration/
+        if (-f $request_filename) {
+            fastcgi_pass 127.0.0.1:9000;
+        }
+        
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
